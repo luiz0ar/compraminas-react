@@ -1,0 +1,126 @@
+.aboutSection {
+  padding: 6rem 2rem;
+  background-color: #F8F9FA;
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.titleWrapper {
+  text-align: center;
+  margin-bottom: 4rem;
+}
+
+.titleWrapper img {
+  width: 40px;
+  margin-bottom: 0.5rem;
+}
+
+.titleWrapper h2 {
+  font-family: 'Poppins', sans-serif;
+  font-size: 2.5rem;
+  color: #0D2A4C;
+  position: relative;
+  display: inline-block;
+  padding-bottom: 0.5rem;
+}
+
+.titleWrapper h2::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 80px;
+  height: 4px;
+  background-color: #00B33C;
+}
+
+.contentGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 4rem;
+  align-items: center;
+}
+
+.textColumn p {
+  font-family: 'Inter', sans-serif;
+  font-size: 1rem;
+  line-height: 1.8;
+  color: #555;
+  margin-bottom: 1.5rem;
+}
+
+.textColumn p:last-child {
+  margin-bottom: 0;
+}
+
+.imageColumn img {
+  width: 100%;
+  border-radius: 12px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+}
+
+.buttonWrapper {
+  margin-top: 4rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 1.5rem;
+  flex-wrap: wrap;
+}
+
+.primaryButton, .secondaryButton {
+  padding: 1rem 2.5rem;
+  border-radius: 8px;
+  text-decoration: none;
+  font-family: 'Poppins', sans-serif;
+  font-weight: 600;
+  font-size: 0.9rem;
+  transition: all 0.3s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  border: 2px solid transparent;
+}
+
+.primaryButton {
+  background-color: #00B33C;
+  color: #FFFFFF;
+}
+
+.primaryButton:hover {
+  background-color: #009933;
+  transform: translateY(-3px);
+  box-shadow: 0 4px 15px rgba(0, 179, 60, 0.3);
+}
+
+.secondaryButton {
+  background-color: #FFFFFF;
+  color: #0D2A4C;
+  border-color: #e0e0e0;
+}
+
+.secondaryButton:hover {
+  border-color: #0D2A4C;
+  color: #0D2A4C;
+  transform: translateY(-3px);
+}
+
+.titleWrapper h2 {
+  font-family: 'Poppins', sans-serif;
+  font-size: 2.5rem;
+  color: #0D2A4C;
+  position: relative;
+  display: inline-block;
+  padding-bottom: 0.5rem;
+}
+
+
+@media (max-width: 992px) {
+  .contentGrid {
+    grid-template-columns: 1fr;
+  }
+}

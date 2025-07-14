@@ -1,0 +1,34 @@
+.contactSection {
+  padding: 6rem 2rem;
+  background-color: #FFFFFF;
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.infoGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 2rem;
+  margin-bottom: 6rem;
+}
+
+.formTitleWrapper {
+  text-align: center;
+}
+
+.formTitleWrapper p {
+  color: #00B33C;
+  font-family: 'Poppins', sans-serif;
+  font-weight: 600;
+  margin: 0;
+}
+
+.formTitleWrapper h2 {
+  font-family: 'Poppins', sans-serif;
+  font-size: 2.5rem;
+  color: #0D2A4C;
+  margin: 0.5rem 0 0 0;
+}

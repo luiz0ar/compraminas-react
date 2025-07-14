@@ -1,0 +1,51 @@
+.banner {
+  width: 100%;
+  padding: 6rem 2rem;
+  background-image: linear-gradient(rgba(13, 42, 76, 0.6), rgba(13, 42, 76, 0.6)), url('../../assets/1920x895-banner-inicio-desktop-1.png');
+  background-size: cover;
+  background-position: center;
+  color: #FFFFFF;
+  text-align: center;
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.title {
+  font-family: 'Poppins', sans-serif;
+  font-size: 3.5rem;
+  font-weight: 800;
+  margin: 0 0 1rem 0;
+  text-shadow: 0px 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.breadcrumb {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 0.75rem;
+  font-family: 'Inter', sans-serif;
+  font-weight: 500;
+}
+
+.breadcrumb a {
+  color: #A9B4C2;
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+.breadcrumb a:hover {
+  color: #00B33C;
+}
+
+.breadcrumb span {
+  color: #A9B4C2;
+}
+
+.breadcrumb p {
+  margin: 0;
+  color: #FFFFFF;
+  font-weight: 700;
+}
