@@ -1,22 +1,47 @@
-import React from 'react';
-import styles from './HeroSection.module.css';
+import React, { useEffect, useState } from 'react'
+import styles from './HeroSection.module.css'
+import api from '../../api/api'
 
 function HeroSection() {
+  const [data, setData] = useState(null)
+
+  useEffect(() => {
+    async function fetchData() {
+      try {
+        const response = await api.get('/start')
+        setData(response.data)
+      } catch (error) {
+        console.error('Erro ao buscar dados da seção inicial:', error)
+      }
+    }
+
+    fetchData()
+  }, [])
+
+  if (!data) return null
+
   return (
     <section className={styles.hero}>
-      <div className={styles.container}>
+      <div className={styles.heroContainer}>
         <div className={styles.infoColumn}>
           <h1>COMPRA MINAS: compra certa, resultado garantido!</h1>
           <div className={styles.details}>
-            <p>De 12 a 14 de Março, das 7h às 18h, no Complexo Operacional Minasul!</p>
+            <p>{data.firstMessage}</p>
           </div>
-          <a href="https://www.instagram.com/minasulcooperativa/" target="_blank" rel="noopener noreferrer" className={styles.instagramCta}>
-            CLIQUE AQUI E ACOMPANHE AS NOVIDADES EM NOSSO INSTAGRAM
+          <a
+            href={data.linkButton}
+            target="_blank"
+            rel="noopener noreferrer"
+            className={styles.instagramCta}
+          >
+            {data.textButton}
           </a>
+        </div>
+        <div className={styles.imageColumn}>
         </div>
       </div>
     </section>
-  );
+  )
 }
 
-export default HeroSection;
+export default HeroSection
