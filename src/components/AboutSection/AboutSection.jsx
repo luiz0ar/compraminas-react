@@ -1,11 +1,28 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import styles from './AboutSection.module.css';
 import { IoIosArrowForward } from "react-icons/io";
 import aboutImage from '../../assets/07a.-Banner-Carrossel-Compra-Minas-Minasul.png';
-
+import api from '../../api/api';
 
 function AboutSection() {
+  const [data, setData] = useState(null);
+
+  useEffect(() => {
+    async function fetchData() {
+      try {
+        const response = await api.get('/about-section');
+        setData(response.data);
+      } catch (error) {
+        console.error('Erro ao buscar dados da seção Sobre:', error);
+      }
+    }
+    fetchData();
+  }, []);
+  if (!data) {
+    return <p className={styles.error}>Não foi possível carregar os dados da seção.</p>;
+  }
+
   return (
     <section className={styles.aboutSection}>
       <div className={styles.container}>
@@ -15,12 +32,9 @@ function AboutSection() {
 
         <div className={styles.contentGrid}>
           <div className={styles.textColumn}>
-            <p>
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam id velit ornare, bibendum velit eget, laoreet quam. Vestibulum sit amet tortor placerat, suscipit nunc quis, interdum mi. Suspendisse in suscipit mauris. Vestibulum et ullamcorper massa. Vivamus vitae malesuada augue, vel rutrum sem. In hac habitasse platea dictumst. Quisque vel tempus magna. Suspendisse tempus mauris at turpis sodales, a ultricies arcu viverra.
-            </p>
-            <p>
-              Suspendisse ut lobortis massa. Mauris porta, enim id consequat gravida, lacus est lacinia velit, in accumsan nulla tortor tempor nulla. Phasellus sed sollicitudin nulla. Aenean in dapibus elit. Ut consequat, mauris in sodales consectetur, turpis orci dictum ligula, porta semper erat erat eu libero. Aliquam varius turpis vitae mauris pulvinar, nec maximus nulla condimentum. Duis lacinia mi quis dui pretium commodo. Mauris nec ipsum non dolor faucibus lacinia ut at nunc. Duis vel scelerisque urna. Duis dignissim, odio sit amet suscipit gravida, augue arcu semper lectus, eget semper odio diam eget felis. Aenean venenatis fringilla dui eget tempor. Donec iaculis vel nisi ac iaculis. Suspendisse a facilisis ipsum. Proin efficitur tristique ligula a molestie.
-            </p>
+            {data.content.split('\n\n').map((paragraph, idx) => (
+              <p key={idx}>{paragraph}</p>
+            ))}
           </div>
           <div className={styles.imageColumn}>
             <img src={aboutImage} alt="Aminasul e Compra Minas" />
@@ -29,10 +43,10 @@ function AboutSection() {
 
         <div className={styles.buttonWrapper}>
           <Link to="/about" className={styles.primaryButton}>
-            CONHEÇA MAIS SOBRE O EVENTO
+            {data.buttonPrimaryText}
           </Link>
           <Link to="/exhibitors" className={styles.secondaryButton}>
-            CONHEÇA OS EXPOSITORES
+            {data.buttonSecondaryText}
             <IoIosArrowForward />
           </Link>
         </div>

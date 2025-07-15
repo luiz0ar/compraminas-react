@@ -1,16 +1,5 @@
 import logoMahindra from '../assets/partners/MahindraRise.png';
 
-export const partnersData = [
-  {
-    id: 1,
-    name: 'Mahindra Tratores',
-    logo: logoMahindra,
-    phone: '(35) 3229-3030',
-    website: 'http://mahindratratores.com.br',
-    moreInfoLink: 'http://mahindratratores.com.br'
-  },
-];
-
 export const unitsData = [
   { id: 1, name: 'ALTEROSA', link: '#' },
   { id: 2, name: 'CAMBUQUIRA', link: '#' },
