@@ -1,31 +1,63 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import styles from './ContactInfo.module.css';
 import InfoCard from '../InfoCard/InfoCard.jsx';
+import api from '../../api/api';
 
-// Ícones para os cards
 import { FaMapMarkerAlt, FaHeadset, FaEnvelope } from 'react-icons/fa';
 
 function ContactInfo() {
+  const [contactInfo, setContactInfo] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    async function fetchData() {
+      try {
+        const response = await api.get('/contact');
+        setContactInfo(response.data);
+      } catch (error) {
+        console.error("Erro ao buscar informações de contato:", error);
+      } finally {
+        setIsLoading(false);
+      }
+    }
+    fetchData();
+  }, []);
+
+  if (isLoading) {
+    return (
+      <section className={styles.contactSection}>
+        <div className={styles.container}>
+          <p>Carregando informações de contato...</p>
+        </div>
+      </section>
+    );
+  }
+
+  if (!contactInfo) {
+    return null;
+  }
+
+  const emails = contactInfo.email ? contactInfo.email.split(';').map(e => e.trim()) : [];
+
   return (
     <section className={styles.contactSection}>
       <div className={styles.container}>
         <div className={styles.infoGrid}>
           <InfoCard icon={<FaMapMarkerAlt />} title="Localização">
-            <p> <a href="https://maps.app.goo.gl/hFiaiBZf5DBxCKh38" >Complexo Minasul, Av. Ciarita,<br/>Nº 1, Industrial, Varginha - MG </a></p>
+            <p><a href={contactInfo.locationUrl} target="_blank" rel="noopener noreferrer">{contactInfo.location}</a></p>
           </InfoCard>
-
           <InfoCard icon={<FaHeadset />} title="Telefones">
-            <p>Fixo: <a href="tel:+553532193001">(35) 3219-3001</a></p>
-            <p>Celular: <a href="tel:+5535991276006">(35) 99127-6006</a></p>
+            {contactInfo.fixNumber && <p>Fixo: <a href={`tel:${contactInfo.fixNumber.replace(/\D/g,'')}`}>{contactInfo.fixNumber}</a></p>}
+            {contactInfo.phoneNumber && <p>Celular: <a href={`tel:${contactInfo.phoneNumber.replace(/\D/g,'')}`}>{contactInfo.phoneNumber}</a></p>}
+          </InfoCard>
+          <InfoCard icon={<FaEnvelope />} title="E-mail">
+            {emails.map((email, index) => (
+              <p key={index}><a href={`mailto:${email}`}>{email}</a></p>
+            ))}
           </InfoCard>
 
-          <InfoCard icon={<FaEnvelope />} title="E-mail">
-            <p><a href="mailto:vendas@minasul.com.br">vendas@minasul.com.br</a></p>
-            <p><a href="mailto:comunicacao@minasul.com.br">comunicacao@minasul.com.br</a></p>
-          </InfoCard>
         </div>
 
-        {/* Título do Formulário */}
         <div className={styles.formTitleWrapper}>
           <p>PARA MAIS INFORMAÇÕES</p>
           <h2>PREENCHA OS CAMPOS ABAIXO</h2>

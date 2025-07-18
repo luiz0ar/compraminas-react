@@ -1,28 +1,61 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import ReCAPTCHA from 'react-google-recaptcha';
+import api from '../../api/api';
 import styles from './ContactForm.module.css';
 
 function ContactForm() {
-  const [name, setName] = useState('');
-  const [subject, setSubject] = useState('');
-  const [email, setEmail] = useState('');
-  const [phone, setPhone] = useState('');
-  const [message, setMessage] = useState('');
-  const [consent, setConsent] = useState(false);
+  const [formData, setFormData] = useState({
+    name: '',
+    subject: '',
+    email: '',
+    phone: '',
+    message: '',
+  });
 
   const [recaptchaToken, setRecaptchaToken] = useState(null);
+  const [recaptchaSiteKey, setRecaptchaSiteKey] = useState('');
+  const [isLoading, setIsLoading] = useState(true);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitMessage, setSubmitMessage] = useState('');
 
-  const handleSubmit = (event) => {
+  useEffect(() => {
+    api.get('/contact-settings')
+      .then(response => {
+        if (response.data.recaptcha_site_key) {
+          setRecaptchaSiteKey(response.data.recaptcha_site_key);
+        }
+      })
+      .catch(err => console.error("Error loading settings:", err))
+      .finally(() => setIsLoading(false));
+  }, []);
+
+  const handleInputChange = (e) => {
+    const { id, value } = e.target;
+    setFormData(prev => ({ ...prev, [id]: value }));
+  };
+
+  const handleSubmit = async (event) => {
     event.preventDefault();
+    setSubmitMessage('');
 
     if (!recaptchaToken) {
-      alert("Por favor, complete o reCAPTCHA.");
+      setSubmitMessage("Por favor, complete o reCAPTCHA.");
       return;
     }
 
-    alert("Mensagem enviada com sucesso!");
-    setName('');
-    setSubject('');
+    setIsSubmitting(true);
+
+    try {
+      await api.post('/send-contact-email', { ...formData, recaptchaToken });
+      setSubmitMessage("Mensagem enviada com sucesso! Obrigado.");
+      setFormData({ name: '', subject: '', email: '', phone: '', message: '' });
+    } catch (error) {
+      const errorMessage = error.response?.data?.message || "Ocorreu um erro. Tente novamente.";
+      setSubmitMessage(errorMessage);
+      console.error("Erro no envio:", error);
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -31,39 +64,46 @@ function ContactForm() {
         <form onSubmit={handleSubmit} className={styles.form}>
           <div className={styles.formGroup}>
             <label htmlFor="name">Seu nome</label>
-            <input type="text" id="name" value={name} onChange={(e) => setName(e.target.value)} required />
+            <input type="text" id="name" name="name" value={formData.name} onChange={handleInputChange} required />
           </div>
           <div className={styles.formGroup}>
             <label htmlFor="subject">Assunto</label>
-            <input type="text" id="subject" value={subject} onChange={(e) => setSubject(e.target.value)} required />
+            <input type="text" id="subject" name="subject" value={formData.subject} onChange={handleInputChange} required />
           </div>
           <div className={styles.formGroup}>
             <label htmlFor="email">E-mail</label>
-            <input type="email" id="email" value={email} onChange={(e) => setEmail(e.target.value)} required />
+            <input type="email" id="email" name="email" value={formData.email} onChange={handleInputChange} required />
           </div>
           <div className={styles.formGroup}>
             <label htmlFor="phone">Telefone</label>
-            <input type="tel" id="phone" value={phone} onChange={(e) => setPhone(e.target.value)} />
+            <input type="tel" id="phone" name="phone" value={formData.phone} onChange={handleInputChange} />
           </div>
           <div className={`${styles.formGroup} ${styles.fullWidth}`}>
             <label htmlFor="message">Digite sua mensagem</label>
-            <textarea id="message" rows="6" value={message} onChange={(e) => setMessage(e.target.value)} required></textarea>
+            <textarea id="message" name="message" rows="6" value={formData.message} onChange={handleInputChange} required></textarea>
           </div>
-          <div className={`${styles.formGroup} ${styles.fullWidth} ${styles.checkboxGroup}`}>
-            <input type="checkbox" id="consent" checked={consent} onChange={(e) => setConsent(e.target.checked)} required />
-            <label htmlFor="consent">
-              Li e de acordo em fornecer os meus dados para que a Minasul possa realizar o meu atendimento e autorizo a notificação dos dados para envio de e-mail marketing e mensagens via aplicativos dos serviços prestados pela Minasul. <a href="https://minasul.com.br/politica">Política de Privacidade</a>
-            </label>
-          </div>
+
           <div className={`${styles.formGroup} ${styles.fullWidth}`}>
-            <ReCAPTCHA
-              sitekey="6LesyX4rAAAAAA9J0AzxCYvIdST7GxPxg1_PGgbY"
-              onChange={(token) => setRecaptchaToken(token)}
-            />
+            {isLoading ? (
+              <p>Carregando verificação...</p>
+            ) : (
+              recaptchaSiteKey && (
+                <ReCAPTCHA
+                  sitekey={recaptchaSiteKey}
+                  onChange={(token) => setRecaptchaToken(token)}
+                  onExpired={() => setRecaptchaToken(null)}
+                />
+              )
+            )}
           </div>
+
           <div className={`${styles.formGroup} ${styles.fullWidth}`}>
-            <button type="submit" className={styles.submitButton}>ENVIAR</button>
+            <button type="submit" className={styles.submitButton} disabled={isSubmitting}>
+              {isSubmitting ? 'Sending...' : 'ENVIAR'}
+            </button>
           </div>
+
+          {submitMessage && <p className={styles.submitMessage}>{submitMessage}</p>}
         </form>
       </div>
     </section>

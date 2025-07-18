@@ -1,10 +1,22 @@
 import React from 'react';
 import styles from './PressSection.module.css';
 import { FaFacebookF, FaTwitter, FaWhatsapp } from 'react-icons/fa';
+import { DateTime } from 'luxon';
+import api from '../../api/api';
+
+const API_URL = api.defaults.baseURL;
 
 function PressSection({ article }) {
+  if (!article) {
+    return null;
+  }
+
   const articleUrl = window.location.href;
-  const paragraphs = article.content.split('\n\n');
+  const paragraphs = article.content ? article.content.split('\n\n') : [];
+  const imageUrl = article.image ? `${API_URL}${article.image}` : '';
+  const formattedDate = article.createdAt
+    ? DateTime.fromISO(article.createdAt).setLocale('pt-BR').toLocaleString(DateTime.DATE_FULL)
+    : '';
 
   return (
     <article className={styles.articleLayout}>
@@ -12,18 +24,20 @@ function PressSection({ article }) {
         <header className={styles.articleHeader}>
           <h1>{article.title}</h1>
           <div className={styles.metaInfo}>
-            <span>Publicado em {article.publishDate}</span>
+            <span>Publicado em {formattedDate}</span>
             <div className={styles.shareLinks}>
               <span>Compartilhe:</span>
               <a href={`https://www.facebook.com/sharer/sharer.php?u=${articleUrl}`} target="_blank" rel="noopener noreferrer"><FaFacebookF /></a>
               <a href={`https://twitter.com/intent/tweet?url=${articleUrl}&text=${article.title}`} target="_blank" rel="noopener noreferrer"><FaTwitter /></a>
-              <a href={`https://api.whatsapp.com/send?text=${article.title} ${articleUrl}`} target="_blank" rel="noopener noreferrer"><FaWhatsapp /></a>
+              <a href={`httpshttps://api.whatsapp.com/send?text=${article.title} ${articleUrl}`} target="_blank" rel="noopener noreferrer"><FaWhatsapp /></a>
             </div>
           </div>
         </header>
-        <div className={styles.featuredImage}>
-          <img src={article.featuredImage} alt={article.title} />
-        </div>
+        {imageUrl && (
+          <div className={styles.featuredImage}>
+            <img src={imageUrl} alt={article.title} />
+          </div>
+        )}
         <div className={styles.articleBody}>
           {paragraphs.map((paragraph, index) => (
             <p key={index}>{paragraph}</p>
