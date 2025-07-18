@@ -44,7 +44,7 @@ function PartnersSection() {
           )}
         </div>
         <div className={styles.buttonWrapper}>
-          <Link to="/expositores" className={styles.mainButton}>
+          <Link to="/exhibitors" className={styles.mainButton}>
             VEJA TODOS OS EXPOSITORES →
           </Link>
         </div>

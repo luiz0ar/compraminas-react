@@ -30,9 +30,9 @@ function Footer() {
           <h3 className={styles.footerHeading}>Navegação</h3>
           <ul className={styles.footerList}>
             <li><NavLink to="/">Início</NavLink></li>
-            <li><NavLink to="/sobre">Sobre</NavLink></li>
-            <li><NavLink to="/expositores">Expositores</NavLink></li>
-            <li><NavLink to="/imprensa">Imprensa</NavLink></li>
+            <li><NavLink to="/about">Sobre</NavLink></li>
+            <li><NavLink to="/exhibitors">Expositores</NavLink></li>
+            <li><NavLink to="/press">Imprensa</NavLink></li>
           </ul>
         </div>
         <div className={styles.linksColumn}>
@@ -45,8 +45,8 @@ function Footer() {
                 </a>
               </li>
             )}
-            <li><a href="/politica-de-privacidade">Política de Privacidade</a></li>
-            <li><a href="/contato">Fale Conosco</a></li>
+            <li><a href="https://minasul.com.br/politica">Política de Privacidade</a></li>
+            <li><a href="/contact">Fale Conosco</a></li>
           </ul>
         </div>
       </div>
