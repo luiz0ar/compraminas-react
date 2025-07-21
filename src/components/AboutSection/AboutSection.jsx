@@ -6,7 +6,12 @@ import aboutImage from '../../assets/07a.-Banner-Carrossel-Compra-Minas-Minasul.
 import api from '../../api/api';
 
 function AboutSection() {
-  const [data, setData] = useState(null);
+  const [data, setData] = useState({
+    paragraphs: [],
+    buttonPrimaryText: '',
+    buttonSecondaryText: '',
+  });
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     async function fetchData() {
@@ -15,12 +20,15 @@ function AboutSection() {
         setData(response.data);
       } catch (error) {
         console.error('Erro ao buscar dados da seção Sobre:', error);
+      } finally {
+        setIsLoading(false);
       }
     }
     fetchData();
   }, []);
-  if (!data) {
-    return <p className={styles.error}>Não foi possível carregar os dados da seção.</p>;
+
+  if (isLoading) {
+    return <section className={styles.aboutSection}><p>Carregando...</p></section>;
   }
 
   return (
@@ -29,10 +37,9 @@ function AboutSection() {
         <div className={styles.titleWrapper}>
           <h2>SOBRE O COMPRA MINAS</h2>
         </div>
-
         <div className={styles.contentGrid}>
           <div className={styles.textColumn}>
-            {data.content.split('\n\n').map((paragraph, idx) => (
+            {data.paragraphs.map((paragraph, idx) => (
               <p key={idx}>{paragraph}</p>
             ))}
           </div>
@@ -40,7 +47,6 @@ function AboutSection() {
             <img src={aboutImage} alt="Aminasul e Compra Minas" />
           </div>
         </div>
-
         <div className={styles.buttonWrapper}>
           <Link to="/about" className={styles.primaryButton}>
             {data.buttonPrimaryText}
