@@ -4,7 +4,7 @@ import aboutMainImage from '../../assets/Conceito-1920x1080-1.png';
 import api from '../../api/api';
 
 function AboutContent() {
-  const [pageData, setPageData] = useState({ paragraphs: [], informations: '' });
+  const [pageData, setPageData] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
@@ -21,7 +21,7 @@ function AboutContent() {
     fetchData();
   }, []);
 
-  if (isLoading) {
+  if (isLoading || !pageData) {
     return (
       <section className={styles.aboutContent}>
         <div className={styles.container}>
@@ -38,11 +38,9 @@ function AboutContent() {
           <div className={styles.imageWrapper}>
             <img src={aboutMainImage} alt="Visão geral do evento Compra Minas" />
           </div>
-          {pageData.paragraphs.map((paragraph, index) => (
-            <p key={index}>{paragraph}</p>
-          ))}
+          <p className={styles.mainContent}>{pageData.content}</p>
           <h4>Serviço</h4>
-          <p dangerouslySetInnerHTML={{ __html: pageData.informations }} />
+          <p className={styles.serviceInfo}>{pageData.informations}</p>
         </div>
       </div>
     </section>
