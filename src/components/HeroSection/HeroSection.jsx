@@ -1,27 +1,29 @@
-import React, { useEffect, useState } from 'react'
-import styles from './HeroSection.module.css'
-import api from '../../api/api'
+import React, { useEffect, useState } from 'react';
+import styles from './HeroSection.module.css';
+import api from '../../api/api';
+
+const API_URL = api.defaults.baseURL;
 
 function HeroSection() {
-  const [data, setData] = useState(null)
+  const [data, setData] = useState(null);
 
   useEffect(() => {
     async function fetchData() {
       try {
-        const response = await api.get('/start')
-        setData(response.data)
+        const response = await api.get('/start');
+        setData(response.data);
       } catch (error) {
-        console.error('Erro ao buscar dados da seção inicial:', error)
+        console.error('Erro ao buscar dados da seção inicial:', error);
       }
     }
+    fetchData();
+  }, []);
 
-    fetchData()
-  }, [])
-
-  if (!data) return null
+  if (!data) return null;
+  const bannerImageUrl = data.banner ? `${API_URL}${data.banner}` : '';
 
   return (
-    <section className={styles.hero}>
+    <section className={styles.hero} style={{ backgroundImage: `url(${bannerImageUrl})` }}>
       <div className={styles.heroContainer}>
         <div className={styles.infoColumn}>
           <h1>COMPRA MINAS: compra certa, resultado garantido!</h1>
@@ -41,7 +43,7 @@ function HeroSection() {
         </div>
       </div>
     </section>
-  )
+  );
 }
 
-export default HeroSection
+export default HeroSection;
